@@ -4,8 +4,10 @@ import com.hostel.hostelmanagement.entity.Student;
 import com.hostel.hostelmanagement.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.hostel.hostelmanagement.exception.ResourceNotFoundException;
 
 import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/students")
@@ -16,7 +18,7 @@ public class StudentController {
 
     // Save student
     @PostMapping
-    public Student addStudent(@RequestBody Student student) {
+    public Student addStudent(@Valid @RequestBody Student student) {
         return studentRepository.save(student);
     }
 
@@ -36,5 +38,11 @@ public class StudentController {
     public String deleteStudent(@PathVariable Long id) {
         studentRepository.deleteById(id);
         return "Student deleted successfully!";
+    }
+
+    @GetMapping("/{id}")
+    public Student getStudent(@PathVariable Long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
     }
 }
