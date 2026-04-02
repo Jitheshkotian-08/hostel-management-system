@@ -35,6 +35,7 @@ function addStudent() {
     .then(() => {
       document.getElementById("message").innerText = "Student added!";
       loadStudents();
+      loadDashboard();
     });
   }
   // Clear inputs
@@ -89,6 +90,7 @@ function deleteStudent(id) {
   })
   .then(() => {
     loadStudents();
+    loadDashboard();
 
     // ✅ Optional success message
     document.getElementById("message").innerText = "Student deleted successfully!";
@@ -108,5 +110,17 @@ function editStudent(id, name, email, phone) {
   document.querySelector("button").innerText = "Update Student";
 }
 
+
+function loadDashboard() {
+  fetch(API + "/dashboard")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("totalStudents").innerText = data.totalStudents;
+      document.getElementById("vacantRooms").innerText = data.vacantRooms;
+      document.getElementById("pendingFees").innerText = data.pendingFees;
+    });
+}
+
 // Auto load on page open
 loadStudents();
+loadDashboard();
